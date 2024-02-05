@@ -2,8 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 public class MovieCollection
 {
@@ -207,6 +206,35 @@ public class MovieCollection
         scanner.nextLine();
     }
 
+    public void displayGenreInfo(String genre)
+    {
+        ArrayList<Movie> part = new ArrayList<Movie>();
+        genre = genre.toLowerCase();
+        for(Movie film : movies)
+        {
+            if(film.getGenres().toLowerCase().contains(genre)) part.add(film);
+        }
+        sortResults(part);
+        for(int i =0;i<part.size();i++)
+        {
+            int order = i+1;
+            System.out.println(order+"."+" "+part.get(i).getTitle());
+        }
+        System.out.println("Which movie would you like to learn more about?");
+        System.out.print("Enter number: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        Movie selectedMovie = part.get(choice - 1);
+
+        displayMovieInfo(selectedMovie);
+
+        System.out.println("\n ** Press Enter to Return to Main Menu **");
+        scanner.nextLine();
+    }
+
+
     private void searchCast()
     {
         System.out.print("Enter a cast member: ");
@@ -276,16 +304,125 @@ public class MovieCollection
 
     private void listGenres()
     {
+        ArrayList<String> genres = new ArrayList<String>();
+        for(Movie film: movies)
+        {
+            String[] movieGenres = film.getGenres().split("\\|");
+            for(String genreType: movieGenres)
+            {
+                if(!genres.contains(genreType)) genres.add(genreType);
+            }
+        }
+        sortString(genres);
+        for(int i =0;i<genres.size();i++)
+        {
+            int order = i+1;
+            System.out.println(order+"."+" " + genres.get(i));
+        }
+        System.out.println("Which genre would you like to learn more about?");
+        System.out.print("Enter number: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        String selectedMember = genres.get(choice-1);
+        displayGenreInfo(selectedMember);
+
 
     }
 
     private void listHighestRated()
     {
+        Double[] topRated = new Double[movies.size()];
+        for(int i = 0;i<topRated.length;i++)
+        {
+            topRated[i] =movies.get(i).getUserRating();
+        }
+        Arrays.sort(topRated, Collections.reverseOrder());
+        Movie[] topRatedNames = new Movie[50];
+        int count = 0;
+        for(int i = 0;i<50;i++)
+        {
+            double rating = topRated[i];
+            for(Movie film: movies)
+            {
+                if(film.getUserRating() == rating) {
+                    if (!Arrays.asList(topRatedNames).contains(film))
+                    {
+                        topRatedNames[count] = film;
+                        if(count<49)
+                        {
+                            count++;
+                        }
+                    }
+                }
+            }
+
+        }
+        for(int i =0;i<topRatedNames.length;i++)
+        {
+            int order = i+1;
+            System.out.println(order+"."+" " + topRatedNames[i].getTitle() + ": " + topRatedNames[i].getUserRating());
+        }
+        System.out.println("Which movie would you like to learn more about?");
+        System.out.print("Enter number: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        Movie selectedMovie = topRatedNames[choice - 1];
+
+        displayMovieInfo(selectedMovie);
+
+        System.out.println("\n ** Press Enter to Return to Main Menu **");
+        scanner.nextLine();
 
     }
 
     private void listHighestRevenue()
     {
+        Integer[] topIncome = new Integer[movies.size()];
+        for(int i = 0;i<topIncome.length;i++)
+        {
+            topIncome[i] =movies.get(i).getRevenue();
+        }
+        Arrays.sort(topIncome, Collections.reverseOrder());
+        Movie[] topIncomeNames = new Movie[50];
+        int count = 0;
+        for(int i = 0;i<50;i++)
+        {
+            int income = topIncome[i];
+            for(Movie film: movies)
+            {
+                if(film.getRevenue() == income) {
+                    if (!Arrays.asList(topIncomeNames).contains(film))
+                    {
+                        topIncomeNames[count] = film;
+                        if(count<49)
+                        {
+                            count++;
+                        }
+                    }
+                }
+            }
+
+        }
+        for(int i =0;i<topIncomeNames.length;i++)
+        {
+            int order = i+1;
+            System.out.println(order+"."+" " + topIncomeNames[i].getTitle() + ": " + topIncomeNames[i].getRevenue());
+        }
+        System.out.println("Which movie would you like to learn more about?");
+        System.out.print("Enter number: ");
+
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        Movie selectedMovie = topIncomeNames[choice - 1];
+
+        displayMovieInfo(selectedMovie);
+
+        System.out.println("\n ** Press Enter to Return to Main Menu **");
+        scanner.nextLine();
 
     }
 
